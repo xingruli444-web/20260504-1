@@ -5,7 +5,12 @@ let stars = []; // 用於存儲星星位置
 
 // 特徵點編號定義
 const mouthIndices = [409, 270, 269, 267, 0, 37, 39, 40, 185, 61, 146, 91, 181, 84, 17, 314, 405, 321, 375, 291];
-const leftEyeIndices = [33, 246, 161, 160, 159, 158, 157, 173, 133, 155, 154, 153, 145, 144, 163, 7];
+const leftEyeIndices = [76, 77, 90, 180, 85, 16, 315, 404, 320, 307, 306, 408, 304, 303, 302, 11, 72, 73, 74, 184];
+
+// 右眼特徵點編號 (包含 247 外圈與 246 內圈)
+const rightEyeOuter = [130, 247, 30, 29, 27, 28, 56, 190, 243, 112, 26, 22, 23, 24, 110, 25];
+const rightEyeInner = [33, 246, 161, 160, 159, 158, 157, 173, 133, 155, 154, 153, 145, 144, 163, 7];
+
 // 臉部最外層輪廓編號
 const faceSilhouetteIndices = [
   10, 338, 297, 332, 284, 251, 389, 356, 454, 323, 361, 288, 397, 365, 379, 378, 400, 377, 152, 148, 176, 149, 150, 136, 172, 58, 132, 93, 234, 127, 162, 21, 54, 103, 67, 109
@@ -84,6 +89,10 @@ function draw() {
     
     // 繪製左眼輪廓
     drawContour(leftEyeIndices, keypoints, vWidth, vHeight);
+
+    // 繪製右眼輪廓 (外圈與內圈)
+    drawContour(rightEyeOuter, keypoints, vWidth, vHeight);
+    drawContour(rightEyeInner, keypoints, vWidth, vHeight);
 
     // 繪製臉部最外層輪廓 (加上霓虹發光效果)
     push();

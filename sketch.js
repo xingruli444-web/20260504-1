@@ -63,21 +63,26 @@ function draw() {
   if (predictions.length > 0) {
     let keypoints = predictions[0].scaledMesh;
     
-    // 使用臉部最外層輪廓建立剪裁遮罩 (Clip)
+    // 使用臉部最外層輪廓建立剪裁遮罩，讓影像只在臉部內顯示
     push();
-    beginClip();
-    beginShape();
+    drawingContext.save();
+    drawingContext.beginPath();
     for (let i = 0; i < faceSilhouetteIndices.length; i++) {
       let index = faceSilhouetteIndices[i];
       let x = map(keypoints[index][0], 0, capture.width, -vWidth / 2, vWidth / 2);
       let y = map(keypoints[index][1], 0, capture.height, -vHeight / 2, vHeight / 2);
-      vertex(x, y);
+      if (i === 0) {
+        drawingContext.moveTo(x, y);
+      } else {
+        drawingContext.lineTo(x, y);
+      }
     }
-    endShape(CLOSE);
-    endClip();
+    drawingContext.closePath();
+    drawingContext.clip();
 
-    // 在遮罩範圍內繪製影像
+    // 只在臉部輪廓內繪製攝影機影像
     image(capture, 0, 0, vWidth, vHeight);
+    drawingContext.restore();
     pop();
     
     stroke(255, 0, 0); // 線條採用紅色
@@ -96,11 +101,12 @@ function draw() {
 
     // 繪製臉部最外層輪廓 (加上霓虹發光效果)
     push();
-    // 設定發光效果
-    drawingContext.shadowBlur = 15; // 暈開的程度
-    drawingContext.shadowColor = color(255, 0, 0); // 光暈顏色
-    strokeWeight(2); // 稍微加粗一點讓效果更明顯
+    drawingContext.shadowBlur = 20; // 暈開的程度
+    drawingContext.shadowColor = 'rgba(255, 0, 0, 0.9)'; // 光暈顏色
+    strokeWeight(2);
     drawContour(faceSilhouetteIndices, keypoints, vWidth, vHeight);
+    drawingContext.shadowBlur = 0;
+    drawingContext.shadowColor = 'rgba(0, 0, 0, 0)';
     pop();
   }
   pop();

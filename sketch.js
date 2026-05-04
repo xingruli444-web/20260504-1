@@ -21,7 +21,7 @@ const faceSilhouetteIndices = [
 function setup() {
   createCanvas(windowWidth, windowHeight);
   capture = createCapture(VIDEO);
-  capture.size(640, 480);
+  capture.size(windowWidth, windowHeight);
   capture.hide(); // 隱藏預設在畫布下方的 DOM 元件
 
   // 初始化星星 (隨機產生 200 顆)
@@ -46,8 +46,8 @@ function draw() {
   // 確保攝影機已啟動
   if (!capture.elt.readyState) return;
 
-  let vWidth = width * 0.5;
-  let vHeight = height * 0.5;
+  let vWidth = width;
+  let vHeight = height;
 
   push();
   translate(width / 2, height / 2);
@@ -120,6 +120,9 @@ function draw() {
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
+  if (capture) {
+    capture.size(windowWidth, windowHeight);
+  }
 }
 
 // 輔助函式：根據編號陣列繪製閉合輪廓

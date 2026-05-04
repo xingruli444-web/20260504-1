@@ -2,7 +2,7 @@ let capture;
 let facemesh;
 let predictions = [];
 
-// 指定的臉部特徵點編號 (嘴唇外圈路徑)
+// 使用者指定的特徵點編號 (嘴巴區域)
 const mouthIndices = [409, 270, 269, 267, 0, 37, 39, 40, 185, 61, 146, 91, 181, 84, 17, 314, 405, 321, 375, 291];
 
 function setup() {
@@ -47,7 +47,7 @@ function draw() {
     strokeWeight(1);   // 粗細為 1
     noFill();
     
-    // 利用 line 指令將指定編號的點串接在一起，形成閉合的嘴巴輪廓
+    // 利用 line 指令將指定編號的點串接在一起，形成閉合嘴巴輪廓
     for (let i = 0; i < mouthIndices.length; i++) {
       let p1 = keypoints[mouthIndices[i]];
       // 取得下一個點，若為最後一個點則自動連回第一個點

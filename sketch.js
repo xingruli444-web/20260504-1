@@ -5,6 +5,7 @@ let stars = []; // 用於存儲星星位置
 
 // 特徵點編號定義
 const mouthIndices = [409, 270, 269, 267, 0, 37, 39, 40, 185, 61, 146, 91, 181, 84, 17, 314, 405, 321, 375, 291];
+const leftEyeIndices = [76, 77, 90, 180, 85, 16, 315, 404, 320, 307, 306, 408, 304, 303, 302, 11, 72, 73, 74, 184];
 const leftEyeOuter = [76, 77, 90, 180, 85, 16, 315, 404, 320, 307, 306, 408, 304, 303, 302, 11];
 const leftEyeInner = [72, 73, 74, 184];
 
@@ -93,7 +94,10 @@ function draw() {
     // 繪製嘴巴輪廓
     drawContour(mouthIndices, keypoints, vWidth, vHeight);
     
-    // 繪製左眼輪廓 (外圈與內圈)
+    // 繪製左眼輪廓
+    drawContour(leftEyeIndices, keypoints, vWidth, vHeight);
+
+    // 若需要可繼續繪製左眼外圈/內圈
     drawContour(leftEyeOuter, keypoints, vWidth, vHeight);
     drawContour(leftEyeInner, keypoints, vWidth, vHeight);
 

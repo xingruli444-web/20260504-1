@@ -2,9 +2,8 @@ let capture;
 let facemesh;
 let predictions = [];
 
-// 右眼特徵點編號 (FaceMesh 標準定義)
-const rightEyeOuter = [130, 247, 30, 29, 27, 28, 56, 190, 243, 112, 26, 22, 23, 24, 110, 25];
-const rightEyeInner = [33, 246, 161, 160, 159, 158, 157, 173, 133, 155, 154, 153, 145, 144, 163, 7];
+// 指定的臉部特徵點編號 (嘴唇外圈路徑)
+const mouthIndices = [409, 270, 269, 267, 0, 37, 39, 40, 185, 61, 146, 91, 181, 84, 17, 314, 405, 321, 375, 291];
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -44,32 +43,25 @@ function draw() {
   if (predictions.length > 0) {
     let keypoints = predictions[0].scaledMesh;
     
-    stroke(255, 0, 0); // 紅色
-    strokeWeight(1);   // 粗細改為 1
+    stroke(255, 0, 0); // 線條採用紅色
+    strokeWeight(1);   // 粗細為 1
     noFill();
     
-    // 繪製右眼外圈
-    drawEyeCircle(rightEyeOuter, keypoints, vWidth, vHeight);
-    // 繪製右眼內圈
-    drawEyeCircle(rightEyeInner, keypoints, vWidth, vHeight);
+    // 利用 line 指令將指定編號的點串接在一起，形成閉合的嘴巴輪廓
+    for (let i = 0; i < mouthIndices.length; i++) {
+      let p1 = keypoints[mouthIndices[i]];
+      // 取得下一個點，若為最後一個點則自動連回第一個點
+      let p2 = keypoints[mouthIndices[(i + 1) % mouthIndices.length]];
+
+      let x1 = map(p1[0], 0, capture.width, -vWidth / 2, vWidth / 2);
+      let y1 = map(p1[1], 0, capture.height, -vHeight / 2, vHeight / 2);
+      let x2 = map(p2[0], 0, capture.width, -vWidth / 2, vWidth / 2);
+      let y2 = map(p2[1], 0, capture.height, -vHeight / 2, vHeight / 2);
+
+      line(x1, y1, x2, y2);
+    }
   }
   pop();
-}
-
-// 輔助函式：根據編號陣列繪製封閉的線條圈
-function drawEyeCircle(indices, points, vW, vH) {
-  for (let i = 0; i < indices.length; i++) {
-    let p1 = points[indices[i]];
-    // 取得下一個點，若為最後一個點則連回第一個點
-    let p2 = points[indices[(i + 1) % indices.length]];
-
-    let x1 = map(p1[0], 0, capture.width, -vW / 2, vW / 2);
-    let y1 = map(p1[1], 0, capture.height, -vH / 2, vH / 2);
-    let x2 = map(p2[0], 0, capture.width, -vW / 2, vW / 2);
-    let y2 = map(p2[1], 0, capture.height, -vH / 2, vH / 2);
-
-    line(x1, y1, x2, y2);
-  }
 }
 
 function windowResized() {
